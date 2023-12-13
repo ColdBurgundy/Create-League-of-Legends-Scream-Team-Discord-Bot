@@ -1,0 +1,148 @@
+{
+    "702417839004450846": [
+        {
+            "nickname": "차가운버건디",
+            "accountsIndex": 0,
+            "preferred_roles": [
+                "탑",
+                "미드",
+                "서폿"
+            ],
+            "solo_rank_tier": "SILVER",
+            "solo_rank_rank": "IV",
+            "solo_rank_points": 49,
+            "flex_rank_tier": "GOLD",
+            "flex_rank_rank": "III",
+            "flex_rank_points": 31,
+            "rankScore": 34.18599999999999,
+            "win_rate": 51.72,
+            "top_champions": []
+        },
+        {
+            "nickname": "49ers",
+            "accountsIndex": 1,
+            "preferred_roles": [
+                "미드",
+                "서폿"
+            ],
+            "solo_rank_tier": "BRONZE",
+            "solo_rank_rank": "III",
+            "solo_rank_points": 80,
+            "flex_rank_tier": null,
+            "flex_rank_rank": null,
+            "flex_rank_points": null,
+            "rankScore": 16.31,
+            "win_rate": 20.0,
+            "top_champions": []
+        },
+        {
+            "nickname": "전상득",
+            "accountsIndex": 5,
+            "preferred_roles": [
+                "정글",
+                "미드"
+            ],
+            "solo_rank_tier": "GRANDMASTER",
+            "solo_rank_rank": "I",
+            "solo_rank_points": 713,
+            "flex_rank_tier": null,
+            "flex_rank_rank": null,
+            "flex_rank_points": null,
+            "rankScore": 73.24099999999999,
+            "win_rate": 52.5,
+            "top_champions": []
+        }
+    ],
+    "659707612371353600": [
+        {
+            "nickname": "애시티",
+            "accountsIndex": 0,
+            "preferred_roles": [
+                "서폿",
+                "정글"
+            ],
+            "solo_rank_tier": "IRON",
+            "solo_rank_rank": "I",
+            "solo_rank_points": 45,
+            "flex_rank_tier": "BRONZE",
+            "flex_rank_rank": "II",
+            "flex_rank_points": 37,
+            "rankScore": 20.176,
+            "win_rate": 55.61,
+            "top_champions": []
+        }
+    ],
+    "476243549483171861": [
+        {
+            "nickname": "도파의도파민",
+            "accountsIndex": 0,
+            "preferred_roles": [
+                "탑"
+            ],
+            "solo_rank_tier": "EMERALD",
+            "solo_rank_rank": "II",
+            "solo_rank_points": 31,
+            "flex_rank_tier": "DIAMOND",
+            "flex_rank_rank": "IV",
+            "flex_rank_points": 28,
+            "rankScore": 66.801,
+            "win_rate": 50.47,
+            "top_champions": []
+        }
+    ],
+    "550909045620342784": [
+        {
+            "nickname": "hide on bush",
+            "accountsIndex": 0,
+            "preferred_roles": [
+                "미드"
+            ],
+            "solo_rank_tier": "GRANDMASTER",
+            "solo_rank_rank": "I",
+            "solo_rank_points": 680,
+            "flex_rank_tier": null,
+            "flex_rank_rank": null,
+            "flex_rank_points": null,
+            "rankScore": 73.00999999999999,
+            "win_rate": 53.12,
+            "top_champions": []
+        }
+    ],
+    "604935546988527619": [
+        {
+            "nickname": "설하월",
+            "accountsIndex": 0,
+            "preferred_roles": [
+                "원딜"
+            ],
+            "solo_rank_tier": null,
+            "solo_rank_rank": null,
+            "solo_rank_points": null,
+            "flex_rank_tier": "BRONZE",
+            "flex_rank_rank": "III",
+            "flex_rank_points": 64,
+            "rankScore": 6.942,
+            "win_rate": 51.52,
+            "top_champions": []
+        }
+    ],
+    "642672649553838080": [
+        {
+            "nickname": "디 아 레이스",
+            "accountsIndex": 0,
+            "preferred_roles": [
+                "탑",
+                "미드"
+            ],
+            "solo_rank_tier": "GOLD",
+            "solo_rank_rank": "I",
+            "solo_rank_points": 14,
+            "flex_rank_tier": "GOLD",
+            "flex_rank_rank": "II",
+            "flex_rank_points": 0,
+            "rankScore": 46.848,
+            "win_rate": 48.59,
+            "top_champions": []
+        }
+    ]
+}
