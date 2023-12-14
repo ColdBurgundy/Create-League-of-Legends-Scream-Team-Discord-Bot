@@ -9,7 +9,7 @@ import yaml
 with open('config.yml') as f:
     keys = yaml.load(f, Loader=yaml.FullLoader)
 
-# Riot API Å°¿Í µğ½ºÄÚµå º¿ ÅäÅ« ¼³Á¤
+# Riot API í‚¤ì™€ ë””ìŠ¤ì½”ë“œ ë´‡ í† í° ì„¤ì •
 discord_bot_token = keys['keys']['discord_bot_token']
 riot_api_key = keys['keys']['riot_api_key']
 
@@ -18,63 +18,63 @@ class CustomHelpCommand(commands.DefaultHelpCommand):
         super().__init__(**options)
 
     async def send_bot_help(self, mapping):
-        embed = discord.Embed(title="µµ¿ò¸»", description="`!help [¸í·É¾î]`Çü½ÄÀ¸·Î ÇØ´ç ¸í·É¾î¿¡ ´ëÇÑ µµ¿ò¸»À» º¼ ¼ö ÀÖ½À´Ï´Ù.", color=0x00ff00)
+        embed = discord.Embed(title="ë„ì›€ë§", description="`!help [ëª…ë ¹ì–´]`í˜•ì‹ìœ¼ë¡œ í•´ë‹¹ ëª…ë ¹ì–´ì— ëŒ€í•œ ë„ì›€ë§ì„ ë³¼ ìˆ˜ ìˆìŠµë‹ˆë‹¤.", color=0x00ff00)
         for cog, commands in mapping.items():
             filtered = await self.filter_commands(commands, sort=True)
             command_signatures = [self.get_command_signature(c) for c in filtered]
             if command_signatures:
-                cog_name = getattr(cog, "qualified_name", "¸í·É¾î ¸ñ·Ï")
+                cog_name = getattr(cog, "qualified_name", "ëª…ë ¹ì–´ ëª©ë¡")
                 embed.add_field(name=cog_name, value="\n".join(command_signatures), inline=False)
 
         channel = self.get_destination()
         await channel.send(embed=embed)
 
     async def send_command_help(self, command):
-        embed = discord.Embed(title=self.get_command_signature(command), description=command.help or "¼³¸í ¾øÀ½", color=0x00ff00)
+        embed = discord.Embed(title=self.get_command_signature(command), description=command.help or "ì„¤ëª… ì—†ìŒ", color=0x00ff00)
         channel = self.get_destination()
         await channel.send(embed=embed)
 
-# Riot API¿Í µğ½ºÄÚµå Å¬¶óÀÌ¾ğÆ® ÃÊ±âÈ­
+# Riot APIì™€ ë””ìŠ¤ì½”ë“œ í´ë¼ì´ì–¸íŠ¸ ì´ˆê¸°í™”
 lol_watcher = LolWatcher(riot_api_key)
 client = commands.Bot(command_prefix='!', intents=discord.Intents.all(), help_command=CustomHelpCommand())
 
-# °¢ µğ½ºÄÚµå »ç¿ëÀÚÀÇ ·Ñ °èÁ¤À» ÀúÀåÇÏ´Â µñ¼Å³Ê¸®
+# ê° ë””ìŠ¤ì½”ë“œ ì‚¬ìš©ìì˜ ë¡¤ ê³„ì •ì„ ì €ì¥í•˜ëŠ” ë”•ì…”ë„ˆë¦¬
 user_lol_accounts = {}  # key: discord user id, value: list of LolAccount objects
 
-# À¯ÀúµéÀÌ ¼±ÅÃÇÑ ·Ñ °èÁ¤À» ÀúÀåÇÒ ¸®½ºÆ®
+# ìœ ì €ë“¤ì´ ì„ íƒí•œ ë¡¤ ê³„ì •ì„ ì €ì¥í•  ë¦¬ìŠ¤íŠ¸
 selected_accounts = []
 
-now_human = 1 # ÇöÀç ÀÎ¿ø ¼ö
-need_human =1 # ÇÊ¿äÇÑ »ç¶÷ ¼ö. ¿ø·¡ 10¸íÀÎµ¥ Å×½ºÆ®¸¦ À§ÇØ °ªÀ» ¹Ù²ãº¸ÀÚ.
+now_human = 1 # í˜„ì¬ ì¸ì› ìˆ˜
+need_human =10 # í•„ìš”í•œ ì‚¬ëŒ ìˆ˜. ì›ë˜ 10ëª…ì¸ë° í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•´ ê°’ì„ ë°”ê¿”ë³´ì.
 
-# Àü¿ª º¯¼ö·Î ÆÀ µ¥ÀÌÅÍ¸¦ ÀúÀå
+# ì „ì—­ ë³€ìˆ˜ë¡œ íŒ€ ë°ì´í„°ë¥¼ ì €ì¥
 red_team = []
 blue_team = []
 
 @client.command(name='intro')
 async def send_intro(ctx):
     embed = discord.Embed(
-        title="µğ½ºÄÚµå º¿ ¼Ò°³",
-        description="¾È³çÇÏ¼¼¿ä! Àú´Â League of Legends ÆÀ »ı¼ºÀ» µµ¿ÍÁÖ´Â µğ½ºÄÚµå º¿ÀÔ´Ï´Ù.",
+        title="ë””ìŠ¤ì½”ë“œ ë´‡ ì†Œê°œ",
+        description="ì•ˆë…•í•˜ì„¸ìš”! ì €ëŠ” League of Legends íŒ€ ìƒì„±ì„ ë„ì™€ì£¼ëŠ” ë””ìŠ¤ì½”ë“œ ë´‡ì…ë‹ˆë‹¤.",
         color=0x00ff00
     )
-    embed.add_field(name="±â´É", value="ÆÀ ÀÚµ¿ ºĞÇÒ, ·Ñ °èÁ¤ µ¥ÀÌÅÍ °ü¸®, À½¼º Ã¤³Î ÀÌµ¿ µî", inline=False)
-    embed.add_field(name="»ç¿ë ¹æ¹ı", value="`!help` ¸í·É¾î·Î ¸ğµç ¸í·É¾î¿Í »ç¿ë ¹æ¹ıÀ» È®ÀÎÇÏ¼¼¿ä.", inline=False)
-    embed.add_field(name="°³¹ßÀÚ", value="[Kim YoungBeen | coldburgundy@gmail.com]", inline=False)
-    embed.add_field(name="¹öÀü", value="v0.7.0", inline=False)
+    embed.add_field(name="ê¸°ëŠ¥", value="íŒ€ ìë™ ë¶„í• , ë¡¤ ê³„ì • ë°ì´í„° ê´€ë¦¬, ìŒì„± ì±„ë„ ì´ë™ ë“±", inline=False)
+    embed.add_field(name="ì‚¬ìš© ë°©ë²•", value="`!help` ëª…ë ¹ì–´ë¡œ ëª¨ë“  ëª…ë ¹ì–´ì™€ ì‚¬ìš© ë°©ë²•ì„ í™•ì¸í•˜ì„¸ìš”.", inline=False)
+    embed.add_field(name="ê°œë°œì", value="[Kim YoungBeen | coldburgundy@gmail.com]", inline=False)
+    embed.add_field(name="ë²„ì „", value="v0.7.0", inline=False)
 
     await ctx.send(embed=embed)
 
 
-# µ¥ÀÌÅÍ ÀúÀå
+# ë°ì´í„° ì €ì¥
 def save_data_to_file(data, filename):
     try:
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
     except IOError as e:
-        print(f"ÆÄÀÏ ÀúÀå Áß ¿À·ù ¹ß»ı: {e}")
+        print(f"íŒŒì¼ ì €ì¥ ì¤‘ ì˜¤ë¥˜ ë°œìƒ: {e}")
 
-# µ¥ÀÌÅÍ ºÒ·¯¿À±â
+# ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
 def load_data_from_file(filename):
     try:
         with open(filename, 'r', encoding='utf-8') as file:
@@ -85,52 +85,52 @@ def load_data_from_file(filename):
         loaded_data = {}
         for uid, accounts_data in data.items():
             loaded_accounts = [LolAccount.from_dict(account_data) for account_data in accounts_data]
-            # °¢ °èÁ¤¿¡ ¼øÂ÷ÀûÀ¸·Î ÀÎµ¦½º ºÎ¿©
+            # ê° ê³„ì •ì— ìˆœì°¨ì ìœ¼ë¡œ ì¸ë±ìŠ¤ ë¶€ì—¬
             for index, account in enumerate(loaded_accounts):
                 account.accountsIndex = index
-            # º¯È¯µÈ °èÁ¤ ¸®½ºÆ®¸¦ loaded_data¿¡ ÀúÀå
+            # ë³€í™˜ëœ ê³„ì • ë¦¬ìŠ¤íŠ¸ë¥¼ loaded_dataì— ì €ì¥
             loaded_data[int(uid)] = loaded_accounts
   
         return loaded_data
     
     except FileNotFoundError:
-        # ÆÄÀÏÀÌ ¾øÀ» °æ¿ì ºó ÆÄÀÏ »ı¼º
+        # íŒŒì¼ì´ ì—†ì„ ê²½ìš° ë¹ˆ íŒŒì¼ ìƒì„±
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump({}, file, ensure_ascii=False, indent=4)
         return {}
     except json.JSONDecodeError as e:
-        print(f"JSON ÆÄÀÏ Çü½Ä ¿À·ù: {e}")
+        print(f"JSON íŒŒì¼ í˜•ì‹ ì˜¤ë¥˜: {e}")
         return {}
     except IOError as e:
-        print(f"ÆÄÀÏ ÀĞ±â Áß ¿À·ù ¹ß»ı: {e}")
+        print(f"íŒŒì¼ ì½ê¸° ì¤‘ ì˜¤ë¥˜ ë°œìƒ: {e}")
         return {}
         
-# ·Ñ °èÁ¤ °´Ã¼ Á¤ÀÇ
+# ë¡¤ ê³„ì • ê°ì²´ ì •ì˜
 class LolAccount:
     def __init__(self, nickname, discord_id = None):
         self.discord_id = discord_id
         self.accountsIndex = None
         self.nickname = nickname
-        self.preferred_roles = []  # ¼±È£ÇÏ´Â ¶óÀÎ
-        self.assigned_role = None  # °áÁ¤µÈ Æ÷Áö¼Ç
-        self.team = None  # ¼Ò¼ÓµÈ ÆÀ
-        self.solo_rank_tier = None  # ¼Ö·Î·©Å© Æ¼¾î
-        self.solo_rank_rank = None  # ¼Ö·Î·©Å© ·Î¸¶¼ıÀÚ
-        self.solo_rank_points = None  # ¼Ö·Î·©Å© Æ÷ÀÎÆ®
-        self.flex_rank_tier = None  # ÀÚÀ¯·©Å© Æ¼¾î
-        self.flex_rank_rank = None  # ÀÚÀ¯·©Å© ·Î¸¶¼ıÀÚ
-        self.flex_rank_points = None  # ÀÚÀ¯·©Å© Æ÷ÀÎÆ®
-        self.rankScore = None # ·©Å© ¼öÄ¡È­
-        self.win_rate = None  # ·©Å©°ÔÀÓ ½Â·ü
-        self.top_champions = []  # ¼÷·Ãµµ ³ôÀº Ã¨ÇÇ¾ğ 5°³
+        self.preferred_roles = []  # ì„ í˜¸í•˜ëŠ” ë¼ì¸
+        self.assigned_role = None  # ê²°ì •ëœ í¬ì§€ì…˜
+        self.team = None  # ì†Œì†ëœ íŒ€
+        self.solo_rank_tier = None  # ì†”ë¡œë­í¬ í‹°ì–´
+        self.solo_rank_rank = None  # ì†”ë¡œë­í¬ ë¡œë§ˆìˆ«ì
+        self.solo_rank_points = None  # ì†”ë¡œë­í¬ í¬ì¸íŠ¸
+        self.flex_rank_tier = None  # ììœ ë­í¬ í‹°ì–´
+        self.flex_rank_rank = None  # ììœ ë­í¬ ë¡œë§ˆìˆ«ì
+        self.flex_rank_points = None  # ììœ ë­í¬ í¬ì¸íŠ¸
+        self.rankScore = None # ë­í¬ ìˆ˜ì¹˜í™”
+        self.win_rate = None  # ë­í¬ê²Œì„ ìŠ¹ë¥ 
+        self.top_champions = []  # ìˆ™ë ¨ë„ ë†’ì€ ì±”í”¼ì–¸ 5ê°œ
         self.update_account_info()
 
     def update_account_info(self):
         try:
-            # ¼ÒÈ¯»ç Á¤º¸ °¡Á®¿À±â
+            # ì†Œí™˜ì‚¬ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
             summoner_info = lol_watcher.summoner.by_name('kr', self.nickname)
 
-            # ·©Å© Á¤º¸ °¡Á®¿À±â
+            # ë­í¬ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
             ranked_stats = lol_watcher.league.by_summoner('kr', summoner_info['id'])
 
             self.solo_rank_tier = None
@@ -138,7 +138,7 @@ class LolAccount:
             total_wins = 0
             total_losses = 0
 
-            # ¼Ö·Î·©Å© ¹× ÀÚÀ¯·©Å© Á¤º¸ ÃßÃâ
+            # ì†”ë¡œë­í¬ ë° ììœ ë­í¬ ì •ë³´ ì¶”ì¶œ
             for queue in ranked_stats:
                 if queue['queueType'] == 'RANKED_SOLO_5x5':
                     self.solo_rank_tier = queue['tier']
@@ -153,39 +153,39 @@ class LolAccount:
                     total_wins += queue['wins']
                     total_losses += queue['losses']
                     
-            # Æ¼¾î¸¦ ¼ıÀÚ·Î º¯È¯ÇÏ´Â ÇÔ¼ö
+            # í‹°ì–´ë¥¼ ìˆ«ìë¡œ ë³€í™˜í•˜ëŠ” í•¨ìˆ˜
             def tier_to_number(tier):
                 tiers = ["None", "IRON", "BRONZE", "SILVER", "GOLD", "PLATINUM", "EMERALD", "DIAMOND", "MASTER", "GRANDMASTER", "CHALLENGER"]
                 return tiers.index(tier) * 10 if tier in tiers else 0
 
-            # ¼­ºêÆ¼¾î¸¦ ¼ıÀÚ·Î º¯È¯ÇÏ´Â ÇÔ¼ö
+            # ì„œë¸Œí‹°ì–´ë¥¼ ìˆ«ìë¡œ ë³€í™˜í•˜ëŠ” í•¨ìˆ˜
             def rank_to_number(rank):
                 ranks = {"None" : -1, "IV": 0, "III": 2.5, "II": 5, "I": 7.5}
                 return ranks.get(rank, 0)
 
-            # ·©Å© Á¡¼ö °è»ê
+            # ë­í¬ ì ìˆ˜ ê³„ì‚°
             def calculate_rank_score(tier, rank, points):
                 if tier_to_number(tier) == 0:
                     return 0
                 return tier_to_number(tier) + rank_to_number(rank) + (points / 100)
 
-            # ¼Ö·Î·©Å© Á¡¼ö °è»ê
+            # ì†”ë¡œë­í¬ ì ìˆ˜ ê³„ì‚°
             solo_rank_score = calculate_rank_score(self.solo_rank_tier, self.solo_rank_rank, self.solo_rank_points)
 
-            # ÀÚÀ¯·©Å© Á¡¼ö °è»ê
+            # ììœ ë­í¬ ì ìˆ˜ ê³„ì‚°
             flex_rank_score = calculate_rank_score(self.flex_rank_tier, self.flex_rank_rank, self.flex_rank_points)
 
-            # ÃÖÁ¾ ·©Å© Á¡¼ö
+            # ìµœì¢… ë­í¬ ì ìˆ˜
             self.rankScore = solo_rank_score * 0.7 + flex_rank_score * 0.3
             
             '''
 
-            # ¼÷·Ãµµ ³ôÀº Ã¨ÇÇ¾ğ Á¤º¸ °¡Á®¿À±â
+            # ìˆ™ë ¨ë„ ë†’ì€ ì±”í”¼ì–¸ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
             mastery_info = lol_watcher.champion_mastery.by_summoner('kr', summoner_info['id'])
             self.top_champions = [mastery['championId'] for mastery in mastery_info[:5]]
 
             '''
-            # ÀüÃ¼ ·©Å© °ÔÀÓ ½Â·ü °è»ê
+            # ì „ì²´ ë­í¬ ê²Œì„ ìŠ¹ë¥  ê³„ì‚°
             total_games = total_wins + total_losses
             if total_games > 0:
                 self.win_rate = round((total_wins / total_games) * 100, 2)
@@ -233,31 +233,31 @@ class LolAccount:
 
 
 
-# À¯Àú ¼¼ÆÃ
-@client.command(name='user_setting', help = "»ç¿ëÀÚ¿¡ µû¶ó ·Ñ °èÁ¤ µ¥ÀÌÅÍ Ãß°¡¿Í »ç¿ëÇÒ °èÁ¤ ¼±ÅÃÀ» À§ÇÑ ¸í·É¾îÀÔ´Ï´Ù.")
+# ìœ ì € ì„¸íŒ…
+@client.command(name='user_setting', help = "ì‚¬ìš©ìì— ë”°ë¼ ë¡¤ ê³„ì • ë°ì´í„° ì¶”ê°€ì™€ ì‚¬ìš©í•  ê³„ì • ì„ íƒì„ ìœ„í•œ ëª…ë ¹ì–´ì…ë‹ˆë‹¤.")
 async def team_split(ctx):
-    lobby_channel = discord.utils.get(ctx.guild.voice_channels, name='·Îºñ') # Å×½ºÆ®Áß
-    red_channel = discord.utils.get(ctx.guild.voice_channels, name='·¹µå')
-    blue_channel = discord.utils.get(ctx.guild.voice_channels, name='ºí·ç')
+    lobby_channel = discord.utils.get(ctx.guild.voice_channels, name='ë¡œë¹„') # í…ŒìŠ¤íŠ¸ì¤‘
+    red_channel = discord.utils.get(ctx.guild.voice_channels, name='ë ˆë“œ')
+    blue_channel = discord.utils.get(ctx.guild.voice_channels, name='ë¸”ë£¨')
     
     global user_lol_accounts
     user_lol_accounts = load_data_from_file('user_accounts.json')
     members = lobby_channel.members
-    now_human = len(members) # µğ¹ö±ëÇÒ ¶§ ÀûÀıÇÏ°Ô Á¶ÀıÇÏ±â
+    now_human = len(members) # ë””ë²„ê¹…í•  ë•Œ ì ì ˆí•˜ê²Œ ì¡°ì ˆí•˜ê¸°
     if now_human != need_human:
-        await ctx.send(f"·Îºñ¿¡ {need_human-now_human}¸íÀÇ À¯Àú°¡ ÇÊ¿äÇÕ´Ï´Ù. (ÇöÀç {now_human}¸í/{need_human}¸í)")
+        await ctx.send(f"ë¡œë¹„ì— {need_human-now_human}ëª…ì˜ ìœ ì €ê°€ í•„ìš”í•©ë‹ˆë‹¤. (í˜„ì¬ {now_human}ëª…/{need_human}ëª…)")
         return
     
-    await ctx.send(f"·Îºñ¿¡ {need_human}¸íÀÇ À¯Àú°¡ ÀÖ½À´Ï´Ù. °¢ À¯Àú¿¡ ´ëÇØ µ¥ÀÌÅÍ¸¦ È®ÀÎÇÕ´Ï´Ù.\n")
+    await ctx.send(f"ë¡œë¹„ì— {need_human}ëª…ì˜ ìœ ì €ê°€ ìˆìŠµë‹ˆë‹¤. ê° ìœ ì €ì— ëŒ€í•´ ë°ì´í„°ë¥¼ í™•ì¸í•©ë‹ˆë‹¤.\n")
 
-    # °¢ »ç¿ëÀÚÀÇ ·Ñ °èÁ¤ Á¤º¸ È®ÀÎ ¹× Ãß°¡
+    # ê° ì‚¬ìš©ìì˜ ë¡¤ ê³„ì • ì •ë³´ í™•ì¸ ë° ì¶”ê°€
     for member in members:
         while True:
             user_lol_accounts = load_data_from_file('user_accounts.json')
             if member.id in user_lol_accounts:
                 accounts = user_lol_accounts[member.id]
                 account_list = "\n".join([f"{idx+1}: {account.nickname}" for idx, account in enumerate(accounts)])
-                await ctx.send(f"{member.mention}, ÇöÀç µî·ÏµÈ ·Ñ °èÁ¤ ¸ñ·Ï:\n{account_list}\n»ç¿ëÇÒ °èÁ¤ ¹øÈ£¸¦ ÀÔ·ÂÇÏ°Å³ª, »õ °èÁ¤À» Ãß°¡ÇÏ·Á¸é 'new'¸¦ ÀÔ·ÂÇÏ¼¼¿ä. (°Ç³Ê¶Ù·Á¸é '0'À» ÀÔ·Â)")
+                await ctx.send(f"{member.mention}, í˜„ì¬ ë“±ë¡ëœ ë¡¤ ê³„ì • ëª©ë¡:\n{account_list}\nì‚¬ìš©í•  ê³„ì • ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ê±°ë‚˜, ìƒˆ ê³„ì •ì„ ì¶”ê°€í•˜ë ¤ë©´ 'new'ë¥¼ ì…ë ¥í•˜ì„¸ìš”. (ê±´ë„ˆë›°ë ¤ë©´ '0'ì„ ì…ë ¥)")
 
                 try:
                     response = await client.wait_for('message', check=lambda m: m.author == member and m.channel == ctx.channel, timeout=60.0)
@@ -268,46 +268,46 @@ async def team_split(ctx):
                         break
                     elif response.content.isdigit() and 1 <= int(response.content) <= len(accounts):
                         selected_index = int(response.content) - 1
-                        # ¼±ÅÃµÈ °èÁ¤¿¡ ´ëÇÑ Ãß°¡ Ã³¸® (¿¹: ÆÀ ÇÒ´ç)
+                        # ì„ íƒëœ ê³„ì •ì— ëŒ€í•œ ì¶”ê°€ ì²˜ë¦¬ (ì˜ˆ: íŒ€ í• ë‹¹)
                         global selected_accounts
                         selected_accounts.append(accounts[selected_index])
-                        await ctx.send(f"{member.display_name}´ÔÀÇ ¼±ÅÃ: {accounts[selected_index].nickname}")
-                        print(f"{member.display_name}´ÔÀÇ ¼±ÅÃ: {accounts[selected_index].nickname}")
+                        await ctx.send(f"{member.display_name}ë‹˜ì˜ ì„ íƒ: {accounts[selected_index].nickname}")
+                        print(f"{member.display_name}ë‹˜ì˜ ì„ íƒ: {accounts[selected_index].nickname}")
                         break
                     else:
-                        await ctx.send(f"{member.mention}, Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù. ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.")
+                        await ctx.send(f"{member.mention}, ì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•´ì£¼ì„¸ìš”.")
                 except asyncio.TimeoutError:
-                    await ctx.send(f"{member.mention}, ½Ã°£ÀÌ ÃÊ°úµÇ¾ú½À´Ï´Ù.")
+                    await ctx.send(f"{member.mention}, ì‹œê°„ì´ ì´ˆê³¼ë˜ì—ˆìŠµë‹ˆë‹¤.")
                     break
                 except Exception as e:
-                    await ctx.send(f"{member.mention}, ¿¡·¯°¡ ¹ß»ıÇß½À´Ï´Ù(team_split): {e}")
+                    await ctx.send(f"{member.mention}, ì—ëŸ¬ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤(team_split): {e}")
                     break
             else:
                 await add_new_lol_account(member, ctx)
                 break
-    await ctx.send(f"¸ğµç »ç¶÷ÀÇ °èÁ¤¼±ÅÃÀÌ ³¡³µ½À´Ï´Ù. \"!team_split\"¸í·ÉÀ¸·Î ÆÀÀ» ±¸¼ºÇÏ¼¼¿ä!\n")
+    await ctx.send(f"ëª¨ë“  ì‚¬ëŒì˜ ê³„ì •ì„ íƒì´ ëë‚¬ìŠµë‹ˆë‹¤. \"!team_split\"ëª…ë ¹ìœ¼ë¡œ íŒ€ì„ êµ¬ì„±í•˜ì„¸ìš”!\n")
 
 
 
-# ÆÀ³ª´©±â
-@client.command(name='team_split', help = "»ç¿ëÀÚµéÀ» µÎ ÆÀÀ¸·Î ³ª´©°í °¢ ÆÀÀÇ ±¸¼º¿øÀ» º¸¿©ÁÖ´Â ¸í·É¾îÀÔ´Ï´Ù.")
+# íŒ€ë‚˜ëˆ„ê¸°
+@client.command(name='team_split', help = "ì‚¬ìš©ìë“¤ì„ ë‘ íŒ€ìœ¼ë¡œ ë‚˜ëˆ„ê³  ê° íŒ€ì˜ êµ¬ì„±ì›ì„ ë³´ì—¬ì£¼ëŠ” ëª…ë ¹ì–´ì…ë‹ˆë‹¤.")
 async def assign_teams(ctx, selected_accounts):
 
-    # ÇÒ´çµÈ ÇÃ·¹ÀÌ¾î ÃßÀûÀ» À§ÇÑ ¸®½ºÆ®
+    # í• ë‹¹ëœ í”Œë ˆì´ì–´ ì¶”ì ì„ ìœ„í•œ ë¦¬ìŠ¤íŠ¸
     assigned_players = []
     global red_team, blue_team
     
 
-    # Á¤±Û, ¼­Æı, ¹Ìµå Æ÷Áö¼Ç¿¡ ´ëÇÑ ÇÃ·¹ÀÌ¾î ¼±ÅÃ
-    for position, position_name in [('Á¤±Û', 'jug'), ('¼­Æı', 'sup'), ('¹Ìµå', 'mid')]:
+    # ì •ê¸€, ì„œí¿, ë¯¸ë“œ í¬ì§€ì…˜ì— ëŒ€í•œ í”Œë ˆì´ì–´ ì„ íƒ
+    for position, position_name in [('ì •ê¸€', 'jug'), ('ì„œí¿', 'sup'), ('ë¯¸ë“œ', 'mid')]:
         position_players = [player for player in selected_accounts if position in player.preferred_roles and player not in assigned_players]
 
         if len(position_players) < 2:
-            await ctx.send(f"{position} ¶óÀÎÀ» ¼±ÅÃÇÏ´Âµ¥ ¹®Á¦°¡ ¹ß»ıÇß½À´Ï´Ù. {position}À» ¼±È£ÇÏ´Â À¯Àú°¡ 2¸í ÀÌ»óÀÌ¾î¾ß ÇÕ´Ï´Ù. ´Ù½Ã ·Ñ ´Ğ³×ÀÓÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.")
-            print(f"{position} ¶óÀÎÀ» ¼±ÅÃÇÏ´Âµ¥ ¹®Á¦°¡ ¹ß»ıÇß½À´Ï´Ù. {position}À» ¼±È£ÇÏ´Â À¯Àú°¡ 2¸í ÀÌ»óÀÌ¾î¾ß ÇÕ´Ï´Ù. ´Ù½Ã ·Ñ ´Ğ³×ÀÓÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.")
+            await ctx.send(f"{position} ë¼ì¸ì„ ì„ íƒí•˜ëŠ”ë° ë¬¸ì œê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. {position}ì„ ì„ í˜¸í•˜ëŠ” ìœ ì €ê°€ 2ëª… ì´ìƒì´ì–´ì•¼ í•©ë‹ˆë‹¤. ë‹¤ì‹œ ë¡¤ ë‹‰ë„¤ì„ì„ ì„ íƒí•´ì£¼ì„¸ìš”.")
+            print(f"{position} ë¼ì¸ì„ ì„ íƒí•˜ëŠ”ë° ë¬¸ì œê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. {position}ì„ ì„ í˜¸í•˜ëŠ” ìœ ì €ê°€ 2ëª… ì´ìƒì´ì–´ì•¼ í•©ë‹ˆë‹¤. ë‹¤ì‹œ ë¡¤ ë‹‰ë„¤ì„ì„ ì„ íƒí•´ì£¼ì„¸ìš”.")
             return
 
-        # µÎ ÇÃ·¹ÀÌ¾î °£ÀÇ ·©Å© Á¡¼ö Â÷ÀÌ°¡ °¡Àå ÀÛÀº Á¶ÇÕÀ» Ã£±â
+        # ë‘ í”Œë ˆì´ì–´ ê°„ì˜ ë­í¬ ì ìˆ˜ ì°¨ì´ê°€ ê°€ì¥ ì‘ì€ ì¡°í•©ì„ ì°¾ê¸°
         position_dis_min = float('inf')
         for i in range(len(position_players)):
             for j in range(i + 1, len(position_players)):
@@ -317,8 +317,8 @@ async def assign_teams(ctx, selected_accounts):
                     selected_pair = (position_players[i], position_players[j])
 
         if position_dis_min > 7:
-            await ctx.send(f"{position} ¶óÀÎÀÇ ½Ç·Â Â÷ÀÌ°¡ Å®´Ï´Ù. ´Ù½Ã ·Ñ ´Ğ³×ÀÓÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.")
-            print(f"{position} ¶óÀÎÀÇ ½Ç·Â Â÷ÀÌ°¡ Å®´Ï´Ù. ´Ù½Ã ·Ñ ´Ğ³×ÀÓÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.")
+            await ctx.send(f"{position} ë¼ì¸ì˜ ì‹¤ë ¥ ì°¨ì´ê°€ í½ë‹ˆë‹¤. ë‹¤ì‹œ ë¡¤ ë‹‰ë„¤ì„ì„ ì„ íƒí•´ì£¼ì„¸ìš”.")
+            print(f"{position} ë¼ì¸ì˜ ì‹¤ë ¥ ì°¨ì´ê°€ í½ë‹ˆë‹¤. ë‹¤ì‹œ ë¡¤ ë‹‰ë„¤ì„ì„ ì„ íƒí•´ì£¼ì„¸ìš”.")
             return
         else:
             if position_name == 'jug':
@@ -328,14 +328,14 @@ async def assign_teams(ctx, selected_accounts):
             elif position_name == 'mid':
                 red_mid, blue_mid = selected_pair
 
-            # ÇÒ´çµÈ ÇÃ·¹ÀÌ¾î¸¦ ÃßÀû ¸®½ºÆ®¿¡ Ãß°¡
+            # í• ë‹¹ëœ í”Œë ˆì´ì–´ë¥¼ ì¶”ì  ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
             assigned_players.extend(selected_pair)
 
-    # ÆÀ ÇÒ´ç
+    # íŒ€ í• ë‹¹
     red_team = [red_jug, red_sup, red_mid]
     blue_team = [blue_jug, blue_sup, blue_mid]
 
-    # ³²Àº ÇÃ·¹ÀÌ¾îµé Ãß°¡
+    # ë‚¨ì€ í”Œë ˆì´ì–´ë“¤ ì¶”ê°€
     remaining_players = [player for player in selected_accounts if player not in assigned_players]
     for player in remaining_players:
         if len(red_team) < 5:
@@ -343,123 +343,123 @@ async def assign_teams(ctx, selected_accounts):
         elif len(blue_team) < 5:
             blue_team.append(player)
             
-    # ÆÀ ±¸¼º¿ø Ãâ·Â
-    await ctx.send("[·¹µåÆÀ ±¸¼º¿ø]")
-    print("·¹µåÆÀ ±¸¼º¿ø")
+    # íŒ€ êµ¬ì„±ì› ì¶œë ¥
+    await ctx.send("[ë ˆë“œíŒ€ êµ¬ì„±ì›]")
+    print("ë ˆë“œíŒ€ êµ¬ì„±ì›")
     for member in red_team:
         await ctx.send(member.nickname)
         print(member.nickname)
 
-    await ctx.send("[ºí·çÆÀ ±¸¼º¿ø]")
-    print("ºí·çÆÀ ±¸¼º¿ø:")
+    await ctx.send("[ë¸”ë£¨íŒ€ êµ¬ì„±ì›]")
+    print("ë¸”ë£¨íŒ€ êµ¬ì„±ì›:")
     for member in blue_team:
         await ctx.send(member.nickname)
         print(member.nickname)
 
-    # ÆÀ ±¸¼º¿ø ÀúÀå
+    # íŒ€ êµ¬ì„±ì› ì €ì¥
     red_team = [member for member in red_team]
     blue_team = [member for member in blue_team]
 
-    await ctx.send("ÆÀ ºĞÇÒ ¿Ï·á. '!move_teams' ¸í·É¾î¸¦ »ç¿ëÇÏ¿© ¸â¹öµéÀ» À½¼º Ã¤³Î·Î ÀÌµ¿½ÃÅ³ ¼ö ÀÖ½À´Ï´Ù.")
+    await ctx.send("íŒ€ ë¶„í•  ì™„ë£Œ. '!move_teams' ëª…ë ¹ì–´ë¥¼ ì‚¬ìš©í•˜ì—¬ ë©¤ë²„ë“¤ì„ ìŒì„± ì±„ë„ë¡œ ì´ë™ì‹œí‚¬ ìˆ˜ ìˆìŠµë‹ˆë‹¤.")
 
-@client.command(name='move_teams', help = "»ı¼ºµÈ ÆÀÀ» ¹ÙÅÁÀ¸·Î °¢ ÆÀÀÇ À½¼ºÃ¤ÆÃ¹æÀ¸·Î ÇÑ¹ø¿¡ ÀÌµ¿½ÃÅ°´Â ¸í·É¾îÀÔ´Ï´Ù.")
+@client.command(name='move_teams', help = "ìƒì„±ëœ íŒ€ì„ ë°”íƒ•ìœ¼ë¡œ ê° íŒ€ì˜ ìŒì„±ì±„íŒ…ë°©ìœ¼ë¡œ í•œë²ˆì— ì´ë™ì‹œí‚¤ëŠ” ëª…ë ¹ì–´ì…ë‹ˆë‹¤.")
 async def move_teams_to_channels(ctx):
-    red_voice_channel = discord.utils.get(ctx.guild.voice_channels, name='·¹µå')
-    blue_voice_channel = discord.utils.get(ctx.guild.voice_channels, name='ºí·ç')
+    red_voice_channel = discord.utils.get(ctx.guild.voice_channels, name='ë ˆë“œ')
+    blue_voice_channel = discord.utils.get(ctx.guild.voice_channels, name='ë¸”ë£¨')
 
-    # ·¹µå ÆÀ ÀÌµ¿
+    # ë ˆë“œ íŒ€ ì´ë™
     if red_voice_channel:
         for member in red_team:
             discord_member = ctx.guild.get_member(member.discord_id)
             if discord_member:
                 try:
                     await discord_member.move_to(red_voice_channel)
-                    await ctx.send(f"{member.nickname}À»(¸¦) ·¹µå Ã¤³Î·Î ÀÌµ¿½ÃÄ×½À´Ï´Ù.")
+                    await ctx.send(f"{member.nickname}ì„(ë¥¼) ë ˆë“œ ì±„ë„ë¡œ ì´ë™ì‹œì¼°ìŠµë‹ˆë‹¤.")
                 except discord.errors.HTTPException:
-                    await ctx.send(f"{member.nickname}À»(¸¦) ·¹µå Ã¤³Î·Î ÀÌµ¿ÇÏÁö ¸øÇß½À´Ï´Ù.")
+                    await ctx.send(f"{member.nickname}ì„(ë¥¼) ë ˆë“œ ì±„ë„ë¡œ ì´ë™í•˜ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.")
 
-    # ºí·ç ÆÀ ÀÌµ¿
+    # ë¸”ë£¨ íŒ€ ì´ë™
     if blue_voice_channel:
         for member in blue_team:
             discord_member = ctx.guild.get_member(member.discord_id)
             if discord_member:
                 try:
                     await discord_member.move_to(blue_voice_channel)
-                    await ctx.send(f"{member.nickname}À»(¸¦) ºí·ç Ã¤³Î·Î ÀÌµ¿½ÃÄ×½À´Ï´Ù.")
+                    await ctx.send(f"{member.nickname}ì„(ë¥¼) ë¸”ë£¨ ì±„ë„ë¡œ ì´ë™ì‹œì¼°ìŠµë‹ˆë‹¤.")
                 except discord.errors.HTTPException:
-                    await ctx.send(f"{member.nickname}À»(¸¦) ºí·ç Ã¤³Î·Î ÀÌµ¿ÇÏÁö ¸øÇß½À´Ï´Ù.")
+                    await ctx.send(f"{member.nickname}ì„(ë¥¼) ë¸”ë£¨ ì±„ë„ë¡œ ì´ë™í•˜ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.")
 
-    await ctx.send("¸ğµç ÆÀ ¸â¹öÀÇ ÀÌµ¿À» ¿Ï·áÇß½À´Ï´Ù.")
+    await ctx.send("ëª¨ë“  íŒ€ ë©¤ë²„ì˜ ì´ë™ì„ ì™„ë£Œí–ˆìŠµë‹ˆë‹¤.")
 
 ############################
-# Å×½ºÆ®¸¦ À§ÇÑ ÀÓ½Ã LolAccount °´Ã¼ »ı¼º
+# í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•œ ì„ì‹œ LolAccount ê°ì²´ ìƒì„±
 def create_test_accounts(n):
     test_accounts = []
     for i in range(n):
         account = LolAccount(f"hideonbush{i}")
-        account.rankScore = i  # Å×½ºÆ®¸¦ À§ÇØ °£´ÜÇÑ ·©Å© Á¡¼ö ºÎ¿©
-        account.preferred_roles = ["Á¤±Û", "¹Ìµå", "¼­Æı"][i % 3]  # ¿¹½Ã·Î ¼¼ °¡Áö Æ÷Áö¼ÇÀ» ¼øÈ¯ÀûÀ¸·Î ÇÒ´ç
+        account.rankScore = i  # í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•´ ê°„ë‹¨í•œ ë­í¬ ì ìˆ˜ ë¶€ì—¬
+        account.preferred_roles = ["ì •ê¸€", "ë¯¸ë“œ", "ì„œí¿"][i % 3]  # ì˜ˆì‹œë¡œ ì„¸ ê°€ì§€ í¬ì§€ì…˜ì„ ìˆœí™˜ì ìœ¼ë¡œ í• ë‹¹
         test_accounts.append(account)
     return test_accounts
 
 
-# Å×½ºÆ® ÇÔ¼ö È£Ãâ
-@client.command(name='test_team_split', help = "½Ç½Ã°£À¸·Î 10¸íº¸´Ù Àû¾î team_splitÀÇ ±â´ÉÀ» È®ÀÎÇÏÁö ¸øÇØ ÀÌ¸¦ Å×½ºÆ®ÇÏ±â À§ÇÑ ¸í·É¾îÀÔ´Ï´Ù.")
+# í…ŒìŠ¤íŠ¸ í•¨ìˆ˜ í˜¸ì¶œ
+@client.command(name='test_team_split', help = "ì‹¤ì‹œê°„ìœ¼ë¡œ 10ëª…ë³´ë‹¤ ì ì–´ team_splitì˜ ê¸°ëŠ¥ì„ í™•ì¸í•˜ì§€ ëª»í•´ ì´ë¥¼ í…ŒìŠ¤íŠ¸í•˜ê¸° ìœ„í•œ ëª…ë ¹ì–´ì…ë‹ˆë‹¤.")
 async def team_split_test(ctx):
 
-    await ctx.send(f"Áö±İºÎÅÍ \"!team_split\"¿¡ ´ëÇØ Å×½ºÆ®ÇÕ´Ï´Ù.\n\n")    
-    # Å×½ºÆ® °èÁ¤ »ı¼º
-    test_accounts = create_test_accounts(10)  # ¿¹½Ã·Î 10°³ÀÇ Å×½ºÆ® °èÁ¤ »ı¼º
-    # Å×½ºÆ® µ¥ÀÌÅÍ »ç¿ë
+    await ctx.send(f"ì§€ê¸ˆë¶€í„° \"!team_split\"ì— ëŒ€í•´ í…ŒìŠ¤íŠ¸í•©ë‹ˆë‹¤.\n\n")    
+    # í…ŒìŠ¤íŠ¸ ê³„ì • ìƒì„±
+    test_accounts = create_test_accounts(10)  # ì˜ˆì‹œë¡œ 10ê°œì˜ í…ŒìŠ¤íŠ¸ ê³„ì • ìƒì„±
+    # í…ŒìŠ¤íŠ¸ ë°ì´í„° ì‚¬ìš©
     selected_accounts = test_accounts
 
     await assign_teams(ctx,selected_accounts)
-    await ctx.send(f"**Å×½ºÆ® ³¡\n\n")
+    await ctx.send(f"**í…ŒìŠ¤íŠ¸ ë\n\n")
 
 
-@client.command(name='remove_account', help = "ÀúÀåµÈ ·Ñ °èÁ¤ Áß Áö¿ì°íÀÚ ÇÏ´Â µ¥ÀÌÅÍ¸¦ »èÁ¦ÇÏ±â À§ÇÑ ¸í·É¾îÀÔ´Ï´Ù.")
+@client.command(name='remove_account', help = "ì €ì¥ëœ ë¡¤ ê³„ì • ì¤‘ ì§€ìš°ê³ ì í•˜ëŠ” ë°ì´í„°ë¥¼ ì‚­ì œí•˜ê¸° ìœ„í•œ ëª…ë ¹ì–´ì…ë‹ˆë‹¤.")
 async def remove_account(ctx):
-    # À¯Àú ID °¡Á®¿À±â
+    # ìœ ì € ID ê°€ì ¸ì˜¤ê¸°
     member_id = ctx.author.id
     global user_lol_accounts
     user_lol_accounts = load_data_from_file('user_accounts.json')
-    # À¯ÀúÀÇ ·Ñ °èÁ¤ ¸ñ·Ï È®ÀÎ
+    # ìœ ì €ì˜ ë¡¤ ê³„ì • ëª©ë¡ í™•ì¸
     if member_id not in user_lol_accounts or not user_lol_accounts[member_id]:
-        await ctx.send("µî·ÏµÈ ·Ñ °èÁ¤ÀÌ ¾ø½À´Ï´Ù.")
+        await ctx.send("ë“±ë¡ëœ ë¡¤ ê³„ì •ì´ ì—†ìŠµë‹ˆë‹¤.")
         return
 
-    # ·Ñ ´Ğ³×ÀÓ ¸ñ·Ï Ãâ·Â
+    # ë¡¤ ë‹‰ë„¤ì„ ëª©ë¡ ì¶œë ¥
     accounts = user_lol_accounts[member_id]
     account_list = "\n".join([f"{idx+1}. {account.nickname}" for idx, account in enumerate(accounts)])
-    await ctx.send(f"»èÁ¦ÇÒ ·Ñ °èÁ¤À» ¼±ÅÃÇØÁÖ¼¼¿ä:\n{account_list}\n¹øÈ£¸¦ ÀÔ·ÂÇÏ°Å³ª, Ãë¼ÒÇÏ·Á¸é '0'À» ÀÔ·ÂÇÏ¼¼¿ä.")
+    await ctx.send(f"ì‚­ì œí•  ë¡¤ ê³„ì •ì„ ì„ íƒí•´ì£¼ì„¸ìš”:\n{account_list}\në²ˆí˜¸ë¥¼ ì…ë ¥í•˜ê±°ë‚˜, ì·¨ì†Œí•˜ë ¤ë©´ '0'ì„ ì…ë ¥í•˜ì„¸ìš”.")
 
     try:
-        # À¯Àú ÀÀ´ä ±â´Ù¸®±â
+        # ìœ ì € ì‘ë‹µ ê¸°ë‹¤ë¦¬ê¸°
         response = await client.wait_for('message', check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=60.0)
 
         if response.content == '0':
-            await ctx.send("Ãë¼ÒµÇ¾ú½À´Ï´Ù.")
+            await ctx.send("ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤.")
             return
 
-        # ÀÔ·ÂµÈ ¹øÈ£ È®ÀÎ
+        # ì…ë ¥ëœ ë²ˆí˜¸ í™•ì¸
         if response.content.isdigit() and 1 <= int(response.content) <= len(accounts):
             selected_index = int(response.content) - 1
             deleted_nickname = accounts[selected_index].nickname
-            del accounts[selected_index]  # ¼±ÅÃµÈ °èÁ¤ »èÁ¦
-            await ctx.send(f"{deleted_nickname} °èÁ¤ÀÌ »èÁ¦µÇ¾ú½À´Ï´Ù.")
+            del accounts[selected_index]  # ì„ íƒëœ ê³„ì • ì‚­ì œ
+            await ctx.send(f"{deleted_nickname} ê³„ì •ì´ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.")
               
-            # º¯°æµÈ µ¥ÀÌÅÍ ÀúÀå
+            # ë³€ê²½ëœ ë°ì´í„° ì €ì¥
             accounts_data = {uid: [acc.to_dict() for acc in accounts] for uid, accounts in user_lol_accounts.items()}
             save_data_to_file(accounts_data, 'user_accounts.json')
         else:
-            await ctx.send("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.")
+            await ctx.send("ì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤.")
     except asyncio.TimeoutError:
-        await ctx.send("½Ã°£ÀÌ ÃÊ°úµÇ¾ú½À´Ï´Ù.")
+        await ctx.send("ì‹œê°„ì´ ì´ˆê³¼ë˜ì—ˆìŠµë‹ˆë‹¤.")
 
 
 async def add_new_lol_account(member, ctx):
     while True:
-        await ctx.send(f"{member.mention}, »õ ·Ñ °èÁ¤ ´Ğ³×ÀÓÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä. (Ãë¼ÒÇÏ·Á¸é '0'À» ÀÔ·Â)")
+        await ctx.send(f"{member.mention}, ìƒˆ ë¡¤ ê³„ì • ë‹‰ë„¤ì„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”. (ì·¨ì†Œí•˜ë ¤ë©´ '0'ì„ ì…ë ¥)")
 
         try:
             response = await client.wait_for('message', check=lambda m: m.author == member and m.channel == ctx.channel, timeout=60.0)
@@ -469,17 +469,17 @@ async def add_new_lol_account(member, ctx):
 
             account = LolAccount(response.content, member.id)
             account.update_account_info()
-            # ¼±È£ÇÏ´Â ¶óÀÎ ÀÔ·Â
+            # ì„ í˜¸í•˜ëŠ” ë¼ì¸ ì…ë ¥
             while True:
                 
-                await ctx.send(f"{account.nickname}´Ô, ¼±È£ÇÏ´Â ¶óÀÎÀ» ÀÔ·ÂÇÏ¼¼¿ä (ÄŞ¸¶·Î ±¸ºĞ, ¿¹: Å¾,¹Ìµå): ")
+                await ctx.send(f"{account.nickname}ë‹˜, ì„ í˜¸í•˜ëŠ” ë¼ì¸ì„ ì…ë ¥í•˜ì„¸ìš” (ì½¤ë§ˆë¡œ êµ¬ë¶„, ì˜ˆ: íƒ‘,ë¯¸ë“œ): ")
                 response = await client.wait_for('message', timeout=60.0)
                 preferred_roles = [role.strip().lower() for role in response.content.split(',')]
-                if all(role in ['Å¾', 'Á¤±Û', '¹Ìµå', '¿øµô', '¼­Æı'] for role in preferred_roles):
+                if all(role in ['íƒ‘', 'ì •ê¸€', 'ë¯¸ë“œ', 'ì›ë”œ', 'ì„œí¿'] for role in preferred_roles):
                     account.preferred_roles = preferred_roles
                     break
                 else:
-                    await ctx.send("¿Ã¹Ù¸¥ ¶óÀÎÀ» ÀÔ·ÂÇÏ¼¼¿ä.")
+                    await ctx.send("ì˜¬ë°”ë¥¸ ë¼ì¸ì„ ì…ë ¥í•˜ì„¸ìš”.")
 
             global user_lol_accounts
             print(len(user_lol_accounts))
@@ -487,15 +487,15 @@ async def add_new_lol_account(member, ctx):
             user_lol_accounts[member.id] = user_lol_accounts.get(member.id, []) + [account]
             accounts_data = {uid: [acc.to_dict() for acc in accounts] for uid, accounts in user_lol_accounts.items()}
             save_data_to_file(accounts_data, 'user_accounts.json')
-            await ctx.send(f"{response.content}¿¡ ´ëÇÑ µ¥ÀÌÅÍ¸¦ ÀúÀåÇß½À´Ï´Ù.")
+            await ctx.send(f"{response.content}ì— ëŒ€í•œ ë°ì´í„°ë¥¼ ì €ì¥í–ˆìŠµë‹ˆë‹¤.")
             break
         except asyncio.TimeoutError:
-            await ctx.send(f"{member.mention}, ½Ã°£ÀÌ ÃÊ°úµÇ¾ú½À´Ï´Ù.")
+            await ctx.send(f"{member.mention}, ì‹œê°„ì´ ì´ˆê³¼ë˜ì—ˆìŠµë‹ˆë‹¤.")
         except Exception as e:
-            await ctx.send(f"{member.mention}, ¿¡·¯°¡ ¹ß»ıÇß½À´Ï´Ù(add_new_lol_account): {e}")
+            await ctx.send(f"{member.mention}, ì—ëŸ¬ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤(add_new_lol_account): {e}")
 
 
-def get_champion_mapping(api_key, region='kr'): #Ã¨ÇÇ¾ğ ÀÌ¸§ ¸ÊÇÎ
+def get_champion_mapping(api_key, region='kr'): #ì±”í”¼ì–¸ ì´ë¦„ ë§µí•‘
     lol_watcher = LolWatcher(api_key)
     latest_version = lol_watcher.data_dragon.versions_for_region(region)['n']['champion']
     champions = lol_watcher.data_dragon.champions(latest_version, False, 'en_US')['data']
@@ -503,7 +503,7 @@ def get_champion_mapping(api_key, region='kr'): #Ã¨ÇÇ¾ğ ÀÌ¸§ ¸ÊÇÎ
 champion_mapping = get_champion_mapping(riot_api_key)
 
 
-@client.command(name='show_accounts', help = "ÀúÀåµÇ¾î ÀÖ´Â ÀüÃ¼ ·Ñ °èÁ¤ Á¤º¸¸¦ À¯Àúº°·Î º¸¿©ÁÖ´Â ¸í·É¾îÀÔ´Ï´Ù.") # ÀúÀåµÈ ÀüÃ¼ °èÁ¤ Ãâ·Â
+@client.command(name='show_accounts', help = "ì €ì¥ë˜ì–´ ìˆëŠ” ì „ì²´ ë¡¤ ê³„ì • ì •ë³´ë¥¼ ìœ ì €ë³„ë¡œ ë³´ì—¬ì£¼ëŠ” ëª…ë ¹ì–´ì…ë‹ˆë‹¤.") # ì €ì¥ëœ ì „ì²´ ê³„ì • ì¶œë ¥
 async def show_accounts(ctx):
     user_lol_accounts = load_data_from_file('user_accounts.json')
     for member_id, accounts in user_lol_accounts.items():
@@ -512,16 +512,16 @@ async def show_accounts(ctx):
             continue
 
         account_info = "\n".join([
-            f"´Ğ³×ÀÓ: {account.nickname}, ¼±È£ Æ÷Áö¼Ç: {', '.join(account.preferred_roles)}, "
-            f"¼Ö·Î·©Å© Æ¼¾î: {account.solo_rank_tier, account.solo_rank_rank}, ¼Ö·Î·©Å© Æ÷ÀÎÆ®: {account.solo_rank_points}, "
-            f"ÀÚÀ¯·©Å© Æ¼¾î: {account.flex_rank_tier, account.flex_rank_rank}, ÀÚÀ¯·©Å© Æ÷ÀÎÆ®: {account.flex_rank_points}, "
-            f"·©Å© Á¡¼ö : {account.rankScore}, ½Â·ü: {account.win_rate}%, ¼÷·Ãµµ ³ôÀº Ã¨ÇÇ¾ğ: {', '.join(account.get_top_champion_names(champion_mapping))}"
+            f"ë‹‰ë„¤ì„: {account.nickname}, ì„ í˜¸ í¬ì§€ì…˜: {', '.join(account.preferred_roles)}, "
+            f"ì†”ë¡œë­í¬ í‹°ì–´: {account.solo_rank_tier, account.solo_rank_rank}, ì†”ë¡œë­í¬ í¬ì¸íŠ¸: {account.solo_rank_points}, "
+            f"ììœ ë­í¬ í‹°ì–´: {account.flex_rank_tier, account.flex_rank_rank}, ììœ ë­í¬ í¬ì¸íŠ¸: {account.flex_rank_points}, "
+            f"ë­í¬ ì ìˆ˜ : {account.rankScore}, ìŠ¹ë¥ : {account.win_rate}%, ìˆ™ë ¨ë„ ë†’ì€ ì±”í”¼ì–¸: {', '.join(account.get_top_champion_names(champion_mapping))}"
             for account in accounts
         ])
 
-        response = f"{member.mention}ÀÇ ·Ñ °èÁ¤:\n{account_info}"
+        response = f"{member.mention}ì˜ ë¡¤ ê³„ì •:\n{account_info}"
         await ctx.send(response)
 
 
-# º¿ ½ÇÇà
+# ë´‡ ì‹¤í–‰
 client.run(discord_bot_token)
